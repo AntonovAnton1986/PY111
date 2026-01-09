@@ -12,7 +12,12 @@ class PriorityQueue:
     LOW_PRIORITY = 10  # наименьший приоритет
 
     def __init__(self):
-        ...  # TODO использовать deque для реализации очереди с приоритетами
+
+        self.priority_queue: dict[int, deque] = {
+            priority: deque() for priority in range(self.HIGH_PRIORITY, self.LOW_PRIORITY + 1)
+        }
+
+        # TODO использовать deque для реализации очереди с приоритетами
 
     def enqueue(self, elem: Any, priority: int = 0) -> None:
         """
@@ -21,7 +26,11 @@ class PriorityQueue:
         :param elem: Элемент, который должен быть добавлен
         :param priority: Приоритет добавляемого элемента
         """
-        ...  # TODO реализовать метод enqueue
+
+
+        self.priority_queue[priority].append(elem)
+
+        # TODO реализовать метод enqueue
 
     def dequeue(self) -> Any:
         """
@@ -31,7 +40,13 @@ class PriorityQueue:
 
         :return: Извлеченный с начала очереди элемент.
         """
-        ...  # TODO реализовать метод dequeue
+        for queue in self.priority_queue.values():
+            if queue:
+                return queue.popleft()
+
+        raise IndexError()
+
+        # TODO реализовать метод dequeue
 
     def peek(self, ind: int = 0, priority: int = 0) -> Any:
         """
@@ -45,12 +60,34 @@ class PriorityQueue:
 
         :return: Значение просмотренного элемента
         """
-        ...  # TODO реализовать метод peek
+        if not isinstance(priority, int):
+            raise TypeError()
+
+        if priority < self.HIGH_PRIORITY or priority > self.LOW_PRIORITY:
+            raise ValueError()
+
+        if not isinstance(ind, int):
+            raise TypeError()
+
+        if ind < 0 or ind >= len(self.priority_queue[priority]):
+            raise IndexError()
+
+        return self.priority_queue[priority][ind]
+
+        # TODO реализовать метод peek
 
     def clear(self) -> None:
         """ Очистка очереди. """
-        ...  # TODO реализовать метод clear
+        for queue in self.priority_queue:
+            queue.clear()
+        # TODO реализовать метод clear
 
     def __len__(self):
         """ Количество элементов в очереди. """
-        ...  # TODO реализовать метод __len__
+        total_length = 0
+        for queue in self.priority_queue:
+            total_length += len(queue)
+        return total_length
+
+
+        # TODO реализовать метод __len__
